@@ -1,0 +1,9 @@
+[project]
+name = "cm-cookiecutters"
+version = "0.1.0"
+description = "Python Cookiecutters Useful for Campaign Management"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "cookiecutter>=2.6.0",
+]
