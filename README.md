@@ -1,6 +1,9 @@
 # CM-COOKIECUTTERS
 
-## Setup
+## Runtime Setup
+Run `uv tool install cookiecutter`.
+
+## Developer Setup
 Run `uv sync`.
 
 ## M49_FL_CI
