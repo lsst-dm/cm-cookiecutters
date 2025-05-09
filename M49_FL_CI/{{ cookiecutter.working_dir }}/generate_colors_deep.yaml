@@ -1,0 +1,60 @@
+description: Run GenerateHipsTask
+instrument: lsst.obs.lsst.LsstCam
+tasks:
+
+  generateColorHipsGRI:
+    class: lsst.pipe.tasks.hips.GenerateColorHipsTask
+    config:
+      connections.coaddName: "deep"
+      python: |
+        config.png_color_asinh_stretch=0.3
+        config.png_color_asinh_softening=10
+        config.png_color_asinh_minimum=0.0
+        config.properties.creator_did_template = "temp://lsst/ci_hsc/hips/images/color_gri"
+        config.properties.obs_title_template = "ComCam: gri deepCoadd w_2025_08x DM-49029"
+        config.properties.obs_description_template = "Color visualization of coadded data from ComCam (red: band i, green: band r, blue: band g) with a hue-preserving stretch."
+
+  generateColorHipsUGR:
+    class: lsst.pipe.tasks.hips.GenerateColorHipsTask
+    config:
+      connections.coaddName: "deep"
+      python: |
+        config.png_color_asinh_stretch=0.4
+        config.png_color_asinh_softening=10
+        config.png_color_asinh_minimum=0.0
+        config.blue_channel_band='u'
+        config.green_channel_band='g'
+        config.red_channel_band='r'
+        config.properties.creator_did_template = "temp://lsst/ci_hsc/hips/images/color_ugr"
+        config.properties.obs_title_template = "ComCam: ugr deepCoadd w_2025_08x DM-49029"
+        config.properties.obs_description_template = "Color visualization of coadded data from ComCam (red: band r, green: band g, blue: band u) with a hue-preserving stretch."
+
+  generateColorHipsRIZ:
+    class: lsst.pipe.tasks.hips.GenerateColorHipsTask
+    config:
+      connections.coaddName: "deep"
+      python: |
+        config.png_color_asinh_stretch=0.5
+        config.png_color_asinh_softening=10
+        config.png_color_asinh_minimum=0.0
+        config.blue_channel_band='r'
+        config.green_channel_band='i'
+        config.red_channel_band='z'
+        config.properties.creator_did_template = "temp://lsst/ci_hsc/hips/images/color_riz"
+        config.properties.obs_title_template = "ComCam: riz deepCoadd w_2025_08x DM-49029"
+        config.properties.obs_description_template = "Color visualization of coadded data from ComCam (red: band z, green: band i, blue: band r) with a hue-preserving stretch."
+
+  generateColorHipsIZY:
+    class: lsst.pipe.tasks.hips.GenerateColorHipsTask
+    config:
+      connections.coaddName: "deep"
+      python: |
+        config.png_color_asinh_stretch=1.9
+        config.png_color_asinh_softening=10
+        config.png_color_asinh_minimum=0.0
+        config.blue_channel_band='i'
+        config.green_channel_band='z'
+        config.red_channel_band='y'
+        config.properties.creator_did_template = "temp://lsst/ci_hsc/hips/images/color_izy"
+        config.properties.obs_title_template = "ComCam: izy deepCoadd w_2025_08x DM-49029"
+        config.properties.obs_description_template = "Color visualization of coadded data from ComCam (red: band y, green: band z, blue: band i) with a hue-preserving stretch."
