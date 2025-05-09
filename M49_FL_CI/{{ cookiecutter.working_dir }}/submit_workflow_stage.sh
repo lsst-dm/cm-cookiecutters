@@ -1,12 +1,15 @@
 #!/bin/sh
 # script for launching single BPS workflow
+# Arguments:
+#  <bps_workflow_yaml>
+#    Default: bps_M49_CL_CI-stage1.yaml
 # -----------------------------------------
 if [[ $UID -ne 17951 ]];
 	then echo "You should be lsstsvc1 before running this script"
 	exit 1
 fi
 
-export WORKFLOW="bps_M49_CL_CI-stage1.yaml"
+export WORKFLOW="${1-bps_M49_CL_CI-stage1.yaml}"
 export WORKDIR={{ cookiecutter.nv_root }}/{{ cookiecutter.working_dir }}
 export BASENAME=$(basename ${WORKFLOW} .yaml)
 export LOGPATH=${WORKDIR}/bps_sub_logs
@@ -27,11 +30,7 @@ fi
 
 echo "Using distribution: ${LSST_VERSION}"
 
-echo "setting steps to process"
-
-echo "First step = ${WORKFLOW}"
-
-echo "performing bps submission for ${WORKFLOW}"
+echo "Submitting BPS Workflow ${WORKFLOW}"
 
 time bps submit ${WORKDIR}/${WORKFLOW} 2>&1 | tee ${LOGPATH}/${LOGFILE}
 
@@ -48,6 +47,9 @@ do
     esac
     sleep 900
 done
+# show the workflow summary post-success
+WORKFLOW_STATUS=$(python ./node_status_parser.py --file ${LOGPATH}/${LOGFILE})
+echo $WORKFLOW_STATUS | jq .
 
-read SD QG < <(./node_status_parser.py --file ${LOGPATH}/${LOGFILE} | jq -r '[.bps_submit_directory, .qgraph_file]|join(" ")')
+read SD QG < <(echo $WORKFLOW_STATUS | jq -r '[.bps_submit_directory, .qgraph_file]|join(" ")')
 pipetask report embargo ${QG} --force-v2 --full-output-filename ./${BASENAME}.json  &> ${LOGPATH}/pipetask_report_${BASENAME}.log

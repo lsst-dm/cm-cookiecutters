@@ -4,4 +4,4 @@ tasks:
   highResolutionHips9:
     class: lsst.pipe.tasks.hips.HighResolutionHipsTask
     config:
-      connections.coaddName: "deep"
+      connections.coadd_exposure_handles: deep_coadd_predetection

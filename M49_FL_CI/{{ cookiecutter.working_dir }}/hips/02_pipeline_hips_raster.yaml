@@ -1,0 +1,84 @@
+description: Run GenerateHipsTask
+instrument: lsst.obs.lsst.LsstCam
+tasks:
+  generateColorHipsGRI_parallel:
+    class: lsst.pipe.tasks.hips.GenerateColorHipsTask
+    config:
+      parallel_highest_order: True
+      min_order: 11
+      file_extension: "png"
+      rgbStyle: "lsstRGB"
+      rgbGenerator.imageRemappingConfig.absMax: 16500
+      connections.coaddName: "deep"
+      python: |
+        config.rgbGenerator.channelConfig['g'].r=0.0
+        config.rgbGenerator.channelConfig['g'].g=0.0
+        config.rgbGenerator.channelConfig['g'].b=1.0
+        config.rgbGenerator.channelConfig['r'].r=0.0
+        config.rgbGenerator.channelConfig['r'].g=1.0
+        config.rgbGenerator.channelConfig['r'].b=0.0
+        config.rgbGenerator.channelConfig['i'].r=1.0
+        config.rgbGenerator.channelConfig['i'].g=0.0
+        config.rgbGenerator.channelConfig['i'].b=0.0
+        config.properties.creator_did_template = "temp://lsst/ecdfs/hips/images/{{ cookiecutter.jira_ticket_number}}/color_gri"
+        config.properties.obs_description_template = "Color visualization of coadded data from LSSTCam (red: band i, green: band r, blue: band g) with a hue-preserving stretch."
+        config.properties.obs_title_template = "LSSTCam: gri deep lsstRGB"
+
+  generateColorHipsGRI:
+    class: lsst.pipe.tasks.hips.GenerateColorHipsTask
+    config:
+      skip_highest_image: False
+      file_extension: "png"
+      rgbStyle: "lsstRGB"
+      rgbGenerator.imageRemappingConfig.absMax: 16500
+      connections.coaddName: "deep"
+      python: |
+        config.rgbGenerator.channelConfig['g'].r=0.0
+        config.rgbGenerator.channelConfig['g'].g=0.0
+        config.rgbGenerator.channelConfig['g'].b=1.0
+        config.rgbGenerator.channelConfig['r'].r=0.0
+        config.rgbGenerator.channelConfig['r'].g=1.0
+        config.rgbGenerator.channelConfig['r'].b=0.0
+        config.rgbGenerator.channelConfig['i'].r=1.0
+        config.rgbGenerator.channelConfig['i'].g=0.0
+        config.rgbGenerator.channelConfig['i'].b=0.0
+        config.properties.creator_did_template = "temp://lsst/ecdfs/hips/images/{{ cookiecutter.jira_ticket_number}}/color_gri"
+        config.properties.obs_description_template = "Color visualization of coadded data from LSSTCam (red: band i, green: band r, blue: band g) with a hue-preserving stretch."
+        config.properties.obs_title_template = "LSSTCam: gri deep lsstRGB"
+
+  generateColorHipsUGR_parallel:
+    class: lsst.pipe.tasks.hips.GenerateColorHipsTask
+    config:
+      parallel_highest_order: True
+      min_order: 11
+      file_extension: "png"
+      rgbStyle: "lsstRGB"
+      rgbGenerator.imageRemappingConfig.absMax: 16500
+      connections.coaddName: "deep"
+      python: |
+        from lsst.pipe.tasks.prettyPictureMaker._task import ChannelRGBConfig
+        config.rgbGenerator.channelConfig = {}
+        config.rgbGenerator.channelConfig['u'] = ChannelRGBConfig(r=0, g=0, b=1)
+        config.rgbGenerator.channelConfig['g'] = ChannelRGBConfig(r=0, g=1, b=0)
+        config.rgbGenerator.channelConfig['r'] = ChannelRGBConfig(r=1, g=0, b=0)
+        config.properties.creator_did_template = "temp://lsst/ecdfs/hips/images/{{ cookiecutter.jira_ticket_number}}/color_ugr"
+        config.properties.obs_description_template = "Color visualization of coadded data from LSSTCam (red: band r, green: band g, blue: band u) with a hue-preserving stretch."
+        config.properties.obs_title_template = "LSSTCam: ugr deep lsstRGB"
+
+  generateColorHipsUGR:
+    class: lsst.pipe.tasks.hips.GenerateColorHipsTask
+    config:
+      skip_highest_image: False
+      file_extension: "png"
+      rgbStyle: "lsstRGB"
+      rgbGenerator.imageRemappingConfig.absMax: 16500
+      connections.coaddName: "deep"
+      python: |
+        from lsst.pipe.tasks.prettyPictureMaker._task import ChannelRGBConfig
+        config.rgbGenerator.channelConfig = {}
+        config.rgbGenerator.channelConfig['u'] = ChannelRGBConfig(r=0, g=0, b=1)
+        config.rgbGenerator.channelConfig['g'] = ChannelRGBConfig(r=0, g=1, b=0)
+        config.rgbGenerator.channelConfig['r'] = ChannelRGBConfig(r=1, g=0, b=0)
+        config.properties.creator_did_template = "temp://lsst/ecdfs/hips/images/{{ cookiecutter.jira_ticket_number}}/color_ugr"
+        config.properties.obs_description_template = "Color visualization of coadded data from LSSTCam (red: band r, green: band g, blue: band u) with a hue-preserving stretch."
+        config.properties.obs_title_template = "LSSTCam: ugr deep lsstRGB"

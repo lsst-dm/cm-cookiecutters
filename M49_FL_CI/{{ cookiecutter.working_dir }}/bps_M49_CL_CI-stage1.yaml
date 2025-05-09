@@ -31,7 +31,6 @@ includeConfigs:
 ########################################
 environment:
   LSST_S3_USE_THREADS: False
-  DAF_BUTLER_CACHE_EXPIRATION_MODE: disabled
   LSST_RESOURCES_EXECUTOR: process
 
 ########################################

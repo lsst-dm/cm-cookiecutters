@@ -1,0 +1,74 @@
+########################################
+# https://rubinobs.atlassian.net/browse/{{ cookiecutter.jira_ticket_number }}
+# {{ cookiecutter.project_name }}
+# HiPS Maps Rasterization Workflow
+########################################
+project: {{ cookiecutter.jira_ticket_number }}
+campaign: {{ cookiecutter.jira_ticket_number }}
+submitPath: "{{ cookiecutter.nv_root }}/submit/{{ cookiecutter.jira_ticket_number }}/${LSST_VERSION}/hips/{timestamp}"
+
+########################################
+# LSST SETUP
+########################################
+LSST_VERSION: ${LSST_VERSION}
+
+########################################
+# BPS VARIABLES
+########################################
+subDirTemplate: "{label}/{detector}"
+OWNER: "lsstsvc1"
+
+########################################
+# PIPELINE CONFIGURATION
+########################################
+pipelineYaml: "generate_colors_deep.yaml##generateColorHipsUGR,generateColorHipsUGR_parallel,generateColorHipsGRI,generateColorHipsGRI_parallel"
+
+########################################
+# SUBMISSION ENVIRONMENT VARIABLES
+########################################
+environment:
+  LSST_S3_USE_THREADS: False
+  DAF_BUTLER_CACHE_EXPIRATION_MODE: datasets=500
+  LSST_RESOURCES_EXECUTOR: process
+
+########################################
+# BPS PAYLOAD OPTIONS
+########################################
+payload:
+  inCollection: LSSTCam/raw/FL-RC1/M49/DM-50780,LSSTCam/calib,refcats,skymaps,pretrained_models
+  output: LSSTCam/runs/M49-FL-CI/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number }}
+  butlerConfig: /repo/embargo
+extraQgraphOptions: > 
+  -c generateColorHipsGRI_parallel:hips_base_uri = "s3://embargo@rubin-views/LSSTCam/runs/M49-FL-CI/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number}}"
+  -c generateColorHipsUGR_parallel:hips_base_uri = "s3://embargo@rubin-views/LSSTCam/runs/M49-FL-CI/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number}}"
+  -c generateColorHipsGRI:hips_base_uri = "s3://embargo@rubin-views/LSSTCam/runs/M49-FL-CI/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number}}"
+  -c generateColorHipsUGR:hips_base_uri = "s3://embargo@rubin-views/LSSTCam/runs/M49-FL-CI/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number}}"
+  -c generateColorHipsGRI_parallel:properties.obs_title_template = "LSSTCam: M49 gri deep ${LSST_VERSION} lsstRGB {{ cookiecutter.jira_ticket_number}}"
+  -c generateColorHipsUGR_parallel:properties.obs_title_template = "LSSTCam: M49 ugr deep ${LSST_VERSION} lsstRGB {{ cookiecutter.jira_ticket_number}}"
+  -c generateColorHipsGRI:properties.obs_title_template = "LSSTCam: M49 gri deep ${LSST_VERSION} lsstRGB {{ cookiecutter.jira_ticket_number}}"
+  -c generateColorHipsUGR:properties.obs_title_template = "LSSTCam: M49 ugr deep ${LSST_VERSION} lsstRGB {{ cookiecutter.jira_ticket_number}}"
+extraRunQuantumOptions: "--no-raise-on-partial-outputs"
+retryUnlessExit: [2]
+numberOfRetries: 3   # 5 is probably too much.
+requestMemory: 4096  # reduce prob that we'll burn a retry memory
+
+########################################
+# CLUSTERING CONFIGURATION
+########################################
+clusterAlgorithm: lsst.ctrl.bps.quantum_clustering_funcs.dimension_clustering
+cluster:
+  generate_color_hips_ugr_parallel:
+    pipetasks: generateColorHipsUGR_parallel
+    dimensions: instrument
+    partitionDimensions: healpix11
+    partitionMaxClusters: 500
+  generate_color_hips_gri_parallel:
+    pipetasks: generateColorHipsGRI_parallel
+    dimensions: instrument
+    partitionDimensions: healpix11
+    partitionMaxClusters: 500
+
+########################################
+# SITE WMS CONFIGURATION
+########################################
+wmsServiceClass: lsst.ctrl.bps.htcondor.HTCondorService

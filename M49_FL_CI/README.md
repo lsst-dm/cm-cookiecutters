@@ -12,6 +12,17 @@
 
 ## Contents
 
+### Submit Workflow Stage
+The `submit_workflow_stage.sh` script is used to submit a single BPS workflow from one of the BPS yaml files included in the cookie. The name of the YAML file should be provided as the first and only argument to this script.
+
+The script should submit the workflow and then loop until it is complete according to the contents of the `.node_status` file in the workflow's submit directory.
+
+### Generate HiPS Maps
+The `generate_hips_maps.sh` script is used to perform the warp and rasterization of healpix tiles after the availability of `deep_coadd_predetection` products. The pipeline and workflow files for these operations are in the `hips/` directory.
+
+### Allocate Nodes
+The `allocate.sh` script is used to generate glide-ins for HTCondor jobs during campaign processing. It is written to loop every 2 minutes for up to 1 day.
+
 ### BPS Submit Node Status
 This cookie includes a Python script and related `jq` filter for parsing a `.node_status` file written by BPS to quickly produce a progress report of a running BPS workflow. "Quickly" is relative to running a `bps report` for the same information.
 

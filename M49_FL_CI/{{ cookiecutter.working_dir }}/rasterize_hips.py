@@ -15,10 +15,12 @@ from multiprocessing import Pool
 from pathlib import Path
 
 PIPETASK_COMMAND=(
-    "pipetask --long-log --log-level=INFO run -j 4 "
+    "pipetask --long-log --log-level=INFO run -j 8 "
     "-b embargo -i ${{HIPS_COLLECTION}} --output ${{HIPS_COLLECTION}} "
     "-p generate_colors_deep.yaml#generateColorHips{band} "
-    "-c 'generateColorHips{band}:hips_base_uri=${{HIPS_OUTPUT_COLLECTION}}' --register-dataset-types"
+    "-c 'generateColorHips{band}:hips_base_uri=${{HIPS_OUTPUT_COLLECTION}}' "
+    "-c 'generateColorHips{band}:properties.obs_title_template=''"
+    "--register-dataset-types"
 )
 
 def worker(band):
@@ -38,7 +40,8 @@ def worker(band):
 
 def main():
     # Available Color Bands
-    COLOR_BANDS=["GRI", "RIZ", "UGR", "IZY"]
+    # COLOR_BANDS=["GRI", "RIZ", "UGR", "IZY"]
+    COLOR_BANDS=["GRI", "UGR"]
 
     with Pool(len(COLOR_BANDS)) as p:
         p.map(worker, COLOR_BANDS)
