@@ -42,6 +42,14 @@ def get_submit_dir_from_bps_log(logfile: Path):
     sys.exit(1)
 
 
+def get_qgraph_file(submit_dir: Path):
+    try:
+        qgraph_file = next(submit_dir.glob("*.qgraph"))
+    except StopIteration:
+        qgraph_file = None
+    return str(qgraph_file)
+
+
 @click.command()
 @click.option("-f", "--file")
 def main(file):
@@ -49,6 +57,7 @@ def main(file):
     dag_status_r = re.compile(DAG_STATUS)
 
     submit_dir = get_submit_dir_from_bps_log(Path(file))
+    qgraph_file = get_qgraph_file(Path(submit_dir))
 
     try:
         node_status_file = next(Path(submit_dir).glob("*.node_status"))
@@ -61,7 +70,7 @@ def main(file):
         object = match.group("object").strip()
         object = re.sub(r"\s+", " ", object)
         if dag_status := re.match(dag_status_r, object):
-            print(json.dumps(dag_status.groupdict()))
+            print(json.dumps({"bps_submit_directory": submit_dir, "qgraph_file": qgraph_file, **dag_status.groupdict()}))
 
 
 if __name__ == "__main__":

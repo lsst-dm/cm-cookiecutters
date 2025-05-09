@@ -42,7 +42,7 @@ payload:
   output: LSSTCam/runs/M49-FL-CI/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number }}
   butlerConfig: /repo/embargo
   dataQuery: "instrument='LSSTCam' AND skymap='lsst_cells_v1' AND tract=10804"
-# extraQgraphOptions: --dataset-query-constraint off
+extraQgraphOptions: --dataset-query-constraint preliminary_visit_summary
 extraRunQuantumOptions: "--no-raise-on-partial-outputs"
 retryUnlessExit: [2]
 numberOfRetries: 3   # 5 is probably too much.
