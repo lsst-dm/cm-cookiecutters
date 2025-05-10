@@ -9,15 +9,13 @@ if [[ $UID -ne 17951 ]];
 	exit 1
 fi
 
+source ./common.sh
+
 export WORKFLOW="${1-bps_M49_FL_CI-stage1.yaml}"
-export WORKDIR={{ cookiecutter.nv_root }}/{{ cookiecutter.working_dir }}
 export BASENAME=$(basename ${WORKFLOW} .yaml)
-export LOGPATH=${WORKDIR}/bps_sub_logs
 export LOGFILE=${BASENAME}.log
 
 pushd ${WORKDIR}
-
-mkdir -p ${LOGPATH}
 
 # if [ -f ./etc/logrotate.conf ]; then
 #     logrotate --state ./logrotate.status -f ./logrotate.conf
