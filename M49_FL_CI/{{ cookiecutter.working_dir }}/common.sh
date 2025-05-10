@@ -1,3 +1,14 @@
+notify () {
+    # send slack notification ${MESSAGE} using ${SLACK_WEBHOOK_URL} if one is defined.
+    test -n "${SLACK_WEBHOOK_URL}" || return
+    test -n "${MESSAGE}" || return
+    curl -X POST -H 'Content-type: application/json' --data '{"text":"'"${MESSAGE}"'"}' ${SLACK_WEBHOOK_URL}
+}
+
+# source any .env file in PWD or its parent
+test -f ../.env && source .env
+test -f .env && source .env
+
 export LSST_DISTRIB={{ cookiecutter.lsst_distrib_dir }}
 export WORKDIR={{ cookiecutter.nv_root }}/{{ cookiecutter.working_dir }}
 export SCREENRC=${WORKDIR}/etc/screenrc
