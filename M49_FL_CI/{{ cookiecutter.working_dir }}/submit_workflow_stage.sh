@@ -19,7 +19,7 @@ pushd ${WORKDIR}
 
 mkdir -p ${LOGPATH}
 
-# if [ -f ./logrotate.conf ]; then
+# if [ -f ./etc/logrotate.conf ]; then
 #     logrotate --state ./logrotate.status -f ./logrotate.conf
 # fi
 
@@ -52,4 +52,4 @@ WORKFLOW_STATUS=$(python ./node_status_parser.py --file ${LOGPATH}/${LOGFILE})
 echo $WORKFLOW_STATUS | jq .
 
 read SD QG < <(echo $WORKFLOW_STATUS | jq -r '[.bps_submit_directory, .qgraph_file]|join(" ")')
-pipetask report embargo ${QG} --force-v2 --full-output-filename ./${BASENAME}.json  &> ${LOGPATH}/pipetask_report_${BASENAME}.log
+pipetask report embargo ${QG} --force-v2 --full-output-filename ./${BASENAME}.json &> ${LOGPATH}/pipetask_report_${BASENAME}.log

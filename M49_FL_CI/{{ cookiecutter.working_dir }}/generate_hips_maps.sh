@@ -11,7 +11,7 @@ pushd $WORKDIR/hips
 
 ################################################################################
 # First get the survey segments (pixels) or use the FIXED_PIXELS list for M49
-# build-high-resolution-hips-qg segment -b embargo -p highres_hips_deep.yaml -i "$COLLECTION" -o 1
+# build-high-resolution-hips-qg segment -b embargo -p 01_pipeline_hips_warp.yaml -i "$COLLECTION" -o 1
 
 ################################################################################
 # Build the graph
