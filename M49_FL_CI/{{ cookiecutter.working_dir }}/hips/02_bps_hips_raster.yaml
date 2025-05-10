@@ -21,7 +21,7 @@ OWNER: "lsstsvc1"
 ########################################
 # PIPELINE CONFIGURATION
 ########################################
-pipelineYaml: "generate_colors_deep.yaml##generateColorHipsUGR,generateColorHipsUGR_parallel,generateColorHipsGRI,generateColorHipsGRI_parallel"
+pipelineYaml: "02_pipeline_hips_raster.yaml#generateColorHipsUGR,generateColorHipsUGR_parallel,generateColorHipsGRI,generateColorHipsGRI_parallel"
 
 ########################################
 # SUBMISSION ENVIRONMENT VARIABLES
@@ -35,18 +35,18 @@ environment:
 # BPS PAYLOAD OPTIONS
 ########################################
 payload:
-  inCollection: LSSTCam/raw/FL-RC1/M49/DM-50780,LSSTCam/calib,refcats,skymaps,pretrained_models
-  output: LSSTCam/runs/M49-FL-CI/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number }}
+  inCollection: ${HIPS_COLLECTION}
+  output: ${HIPS_COLLECTION}
   butlerConfig: /repo/embargo
 extraQgraphOptions: > 
-  -c generateColorHipsGRI_parallel:hips_base_uri = "s3://embargo@rubin-views/LSSTCam/runs/M49-FL-CI/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number}}"
-  -c generateColorHipsUGR_parallel:hips_base_uri = "s3://embargo@rubin-views/LSSTCam/runs/M49-FL-CI/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number}}"
-  -c generateColorHipsGRI:hips_base_uri = "s3://embargo@rubin-views/LSSTCam/runs/M49-FL-CI/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number}}"
-  -c generateColorHipsUGR:hips_base_uri = "s3://embargo@rubin-views/LSSTCam/runs/M49-FL-CI/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number}}"
-  -c generateColorHipsGRI_parallel:properties.obs_title_template = "LSSTCam: M49 gri deep ${LSST_VERSION} lsstRGB {{ cookiecutter.jira_ticket_number}}"
-  -c generateColorHipsUGR_parallel:properties.obs_title_template = "LSSTCam: M49 ugr deep ${LSST_VERSION} lsstRGB {{ cookiecutter.jira_ticket_number}}"
-  -c generateColorHipsGRI:properties.obs_title_template = "LSSTCam: M49 gri deep ${LSST_VERSION} lsstRGB {{ cookiecutter.jira_ticket_number}}"
-  -c generateColorHipsUGR:properties.obs_title_template = "LSSTCam: M49 ugr deep ${LSST_VERSION} lsstRGB {{ cookiecutter.jira_ticket_number}}"
+  -c generateColorHipsGRI_parallel:hips_base_uri="${HIPS_OUTPUT_URI}"
+  -c generateColorHipsUGR_parallel:hips_base_uri="${HIPS_OUTPUT_URI}"
+  -c generateColorHipsGRI:hips_base_uri="${HIPS_OUTPUT_URI}"
+  -c generateColorHipsUGR:hips_base_uri="${HIPS_OUTPUT_URI}"
+  -c generateColorHipsGRI_parallel:properties.obs_title_template="LSSTCam: M49 gri deep ${LSST_VERSION} lsstRGB {{ cookiecutter.jira_ticket_number}}"
+  -c generateColorHipsUGR_parallel:properties.obs_title_template="LSSTCam: M49 ugr deep ${LSST_VERSION} lsstRGB {{ cookiecutter.jira_ticket_number}}"
+  -c generateColorHipsGRI:properties.obs_title_template="LSSTCam: M49 gri deep ${LSST_VERSION} lsstRGB {{ cookiecutter.jira_ticket_number}}"
+  -c generateColorHipsUGR:properties.obs_title_template="LSSTCam: M49 ugr deep ${LSST_VERSION} lsstRGB {{ cookiecutter.jira_ticket_number}}"
 extraRunQuantumOptions: "--no-raise-on-partial-outputs"
 retryUnlessExit: [2]
 numberOfRetries: 3   # 5 is probably too much.
