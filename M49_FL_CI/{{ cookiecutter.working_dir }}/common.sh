@@ -1,6 +1,6 @@
-export SCREENRC={{ cookiecutter.nv_root }}/{{ cookiecutter.working_dir }}/etc/screenrc
 export LSST_DISTRIB={{ cookiecutter.lsst_distrib_dir }}
 export WORKDIR={{ cookiecutter.nv_root }}/{{ cookiecutter.working_dir }}
+export SCREENRC=${WORKDIR}/etc/screenrc
 export LOGPATH=${WORKDIR}/bps_sub_logs
 
 if [ -f .lsst-version ]; then
@@ -12,8 +12,9 @@ else
 fi
 
 export COLLECTION="LSSTCam/runs/M49-FL-CI/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number }}"
-export OUT_COLLECTION=LSSTCam/runs/M49-FL-CI/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number }}
-export HIPS_OUTPUT_COLLECTION="s3://embargo@rubin-views/${COLLECTION}"
+export OUT_COLLECTION="LSSTCam/runs/M49-FL-CI/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number }}"
+export HIPS_COLLECTION="LSSTCam/runs/M49-FL-CI/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number }}/hips"
+export HIPS_OUTPUT_URI="s3://embargo@rubin-views/${COLLECTION}"
 
 export HIPS_QGRAPH_FILE="m49_fl_ci_hips_warp.qgraph"
 export FIXED_PIXELS="25 27 28 36 37 40 41 42 43"

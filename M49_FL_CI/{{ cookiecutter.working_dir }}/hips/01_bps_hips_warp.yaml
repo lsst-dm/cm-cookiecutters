@@ -17,7 +17,7 @@ qgraphFile: ${HIPS_QGRAPH_FILE}
 ########################################
 payload:
   inCollection: LSSTCam/runs/M49-FL-CI/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number }}
-  output: LSSTCam/runs/M49-FL-CI/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number }}
+  output: ${HIPS_COLLECTION}
   butlerConfig: embargo
 
 retryUnlessExit: [2]

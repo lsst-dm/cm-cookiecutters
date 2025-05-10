@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/bin/bash
+set -eo pipefail
+
 # script for launching single BPS workflow
 # Arguments:
 #  <bps_workflow_yaml>
@@ -11,7 +13,12 @@ fi
 
 source ./common.sh
 
-export WORKFLOW="${1-bps_M49_FL_CI-stage1.yaml}"
+export WORKFLOW="${1}"
+
+if [[ -z "${WORKFLOW}" ]];
+    exit 0
+fi
+
 export BASENAME=$(basename ${WORKFLOW} .yaml)
 export LOGFILE=${BASENAME}.log
 
@@ -28,13 +35,16 @@ fi
 
 echo "Using distribution: ${LSST_VERSION}"
 
-echo "Submitting BPS Workflow ${WORKFLOW}"
-
-time bps submit ${WORKDIR}/${WORKFLOW} 2>&1 | tee ${LOGPATH}/${LOGFILE}
+if [ ! -s ${LOGPATH}/${LOGFILE} ]; then
+    echo "Submitting BPS Workflow ${WORKFLOW}"
+    time bps submit ${WORKDIR}/${WORKFLOW} 2>&1 | tee ${LOGPATH}/${LOGFILE}
+fi
 
 # Loop until the exit code is 0
+set +e
 while true
 do
+    test -s ${LOGPATH}/${LOGFILE} || { sleep 60; continue; }
     python ./node_status_parser.py --file ${LOGPATH}/${LOGFILE} | jq -f ./workflow_status.jq
     EC=$?
     case $EC in
@@ -45,9 +55,16 @@ do
     esac
     sleep 900
 done
+set -e
+
 # show the workflow summary post-success
 WORKFLOW_STATUS=$(python ./node_status_parser.py --file ${LOGPATH}/${LOGFILE})
 echo $WORKFLOW_STATUS | jq .
 
+echo "Running pipetask report for ${BASENAME}"
 read SD QG < <(echo $WORKFLOW_STATUS | jq -r '[.bps_submit_directory, .qgraph_file]|join(" ")')
 pipetask report embargo ${QG} --force-v2 --full-output-filename ./${BASENAME}.json &> ${LOGPATH}/pipetask_report_${BASENAME}.log
+EC=$?
+test $EC -eq 0 || echo "WARNING: ${BASENAME} pipetask report exited with code ${EC}"
+
+echo "Workflow ${BASENAME} Finished.
