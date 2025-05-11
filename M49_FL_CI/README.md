@@ -10,7 +10,28 @@
 - Navigate to the root directory for the rendered cookies. This should be the `nv_root` but may be any directory.
 - `cookiecutter https://github.com/lsst-dm/cm-cookiecutters.git --directory="M49_FL_CI" obs_day=$(date '+%Y%m%d')`
 
+## Using
+1. Navigate to working directory.
+2. Start screen session, e.g., `screen -S YYYYmmdd`
+3. Add a second screen window (`^a c`)
+4. Start the `allocate.sh` in this window
+5. Change back to initial window (`^a 0`)
+6. Submit the workflow stage(s) and/or HiPS maps scripts
+
 ## Contents
+
+### LSST Dotfile
+On first run, a script will determine the *most recent* stack of either `d_latest` or `w_latest` and store the dereferenced stack version into a `.lsst-version` file in the working directory. Subsequent script runs will read the stack version from this file.
+
+### Dotenv Files
+The scripts in this cookie will load environment variables from two locations: a `.env` file in the cookie working directory and a `.env` file in the project root directory (which should usually be the direct parent of the working directory).
+
+These files are a good place to set *secret* and other values that should not otherwise be added to this repo or would be tedious to add to each script or working copy.
+
+One such environment variable is `SLACK_WEBHOOK_URL`, which if unset will prevent notifications from being sent, but includes a secret value that should not be stored or added to VCS.
+
+### Screenrc File
+This cookie includes in the `etc/` directory a canonical `screenrc` file that when referred to with the `SCREENRC` environment variable will be used by the `screen` terminal multiplexer as its startup configuration.
 
 ### Submit Workflow Stage
 The `submit_workflow_stage.sh` script is used to submit a single BPS workflow from one of the BPS yaml files included in the cookie. The name of the YAML file should be provided as the first and only argument to this script.
