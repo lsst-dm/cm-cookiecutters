@@ -24,10 +24,6 @@ export LOGFILE=${BASENAME}.log
 
 pushd ${WORKDIR}
 
-# if [ -f ./etc/logrotate.conf ]; then
-#     logrotate --state ./logrotate.status -f ./logrotate.conf
-# fi
-
 if [ -z "${LSST_VERSION}" ]; then
     echo "setting up LSST environment"
     source ./setup_lsstcam.sh
@@ -35,9 +31,14 @@ fi
 
 echo "Using distribution: ${LSST_VERSION}"
 
+# This allows script reentry if the workflow has already been built and submitted
+# so has an active log file. To retrigger the BPS command, remove the stage's
+# logfile (preferably by rotating it.)
 if [ ! -s ${LOGPATH}/${LOGFILE} ]; then
     echo "Submitting BPS Workflow ${WORKFLOW}"
     time bps submit ${WORKDIR}/${WORKFLOW} 2>&1 | tee ${LOGPATH}/${LOGFILE}
+    MESSAGE="FL CI M49 - ${LSST_VERSION} Workflow ${BASENAME} Submitted."
+    notify
 fi
 
 # Loop until the exit code is 0
@@ -49,7 +50,7 @@ do
     EC=$?
     case $EC in
         0) break;;
-        1) exit 1;;
+        1) break;;  # ignore workflow failures
         9) date; python ./node_status_parser.py --file ${LOGPATH}/${LOGFILE} | jq -f ./node_status.jq;;
         *) echo "Unknown status"; exit 1;;
     esac
@@ -67,4 +68,6 @@ pipetask report embargo ${QG} --force-v2 --full-output-filename ./${BASENAME}.js
 EC=$?
 test $EC -eq 0 || echo "WARNING: ${BASENAME} pipetask report exited with code ${EC}"
 
-echo "Workflow ${BASENAME} Finished.
+MESSAGE="FL CI M49 - ${LSST_VERSION} Workflow ${BASENAME} Finished."
+notify
+echo $MESSAGE
