@@ -6,8 +6,8 @@ set -eo pipefail
 #  <bps_workflow_yaml>
 #    Default: bps_M49_CL_CI-stage1.yaml
 # -----------------------------------------
-if [[ $UID -ne 17951 ]];
-	then echo "You should be lsstsvc1 before running this script"
+if [[ $UID -ne 17951 ]]; then
+	echo "You should be lsstsvc1 before running this script"
 	exit 1
 fi
 
@@ -15,26 +15,27 @@ source ./common.sh
 
 export WORKFLOW="${1}"
 
-if [[ -z "${WORKFLOW}" ]];
+if [[ -z "${WORKFLOW}" ]]; then
     exit 0
 fi
 
 export BASENAME=$(basename ${WORKFLOW} .yaml)
 export LOGFILE=${BASENAME}.log
+export JSONFILE=${BASENAME}.json
 
 pushd ${WORKDIR}
 
-if [ -z "${LSST_VERSION}" ]; then
+if [[ -z "${LSST_VERSION}" ]]; then
     echo "setting up LSST environment"
-    source ./setup_lsstcam.sh
+    source ./setup_stack.sh
 fi
 
 echo "Using distribution: ${LSST_VERSION}"
 
 # This allows script reentry if the workflow has already been built and submitted
 # so has an active log file. To retrigger the BPS command, remove the stage's
-# logfile (preferably by rotating it.)
-if [ ! -s ${LOGPATH}/${LOGFILE} ]; then
+# logfile (preferably by rotating it.) AND the pipetask report JSON file if there is one
+if [[ (! -s ${LOGPATH}/${LOGFILE}) && (! -s ${WORKDIR}/${JSONFILE}) ]]; then
     echo "Submitting BPS Workflow ${WORKFLOW}"
     time bps submit ${WORKDIR}/${WORKFLOW} 2>&1 | tee ${LOGPATH}/${LOGFILE}
     MESSAGE="FL CI M49 - ${LSST_VERSION} Workflow ${BASENAME} Submitted."
@@ -62,11 +63,14 @@ set -e
 WORKFLOW_STATUS=$(python ./node_status_parser.py --file ${LOGPATH}/${LOGFILE})
 echo $WORKFLOW_STATUS | jq .
 
-echo "Running pipetask report for ${BASENAME}"
-read SD QG < <(echo $WORKFLOW_STATUS | jq -r '[.bps_submit_directory, .qgraph_file]|join(" ")')
-pipetask report embargo ${QG} --force-v2 --full-output-filename ./${BASENAME}.json &> ${LOGPATH}/pipetask_report_${BASENAME}.log
-EC=$?
-test $EC -eq 0 || echo "WARNING: ${BASENAME} pipetask report exited with code ${EC}"
+if [[ (! -s ${WORKDIR}/${BASENAME}.json) ]]; then
+    echo "Running pipetask report for ${BASENAME}"
+    read SD QG < <(echo $WORKFLOW_STATUS | jq -r '[.bps_submit_directory, .qgraph_file]|join(" ")')
+    test -n "${QG}" || { echo "ERROR: No QG file could be inferred from submit directory"; exit 1 }
+    pipetask report embargo ${QG} --force-v2 --full-output-filename ./${JSONFILE} &> ${LOGPATH}/pipetask_report_${BASENAME}.log
+    EC=$?
+    test $EC -eq 0 || echo "WARNING: ${BASENAME} pipetask report exited with code ${EC}"
+fi
 
 MESSAGE="FL CI M49 - ${LSST_VERSION} Workflow ${BASENAME} Finished."
 notify

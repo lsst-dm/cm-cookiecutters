@@ -19,7 +19,7 @@ test -f ${WORKDIR}/.env && source ${WORKDIR}/.env
 export LSST_DISTRIB={{ cookiecutter.lsst_distrib_dir }}
 export WORKDIR={{ cookiecutter.nv_root }}/{{ cookiecutter.working_dir }}
 export SCREENRC=${WORKDIR}/etc/screenrc
-export LOGPATH=${WORKDIR}/bps_sub_logs
+export LOGPATH=${WORKDIR}/logs
 
 if [ -f .lsst-version ]; then
     export LSST_VERSION=$(cat .lsst-version)

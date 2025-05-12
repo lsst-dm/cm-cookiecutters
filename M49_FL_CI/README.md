@@ -12,11 +12,17 @@
 
 ## Using
 1. Navigate to working directory.
-2. Start screen session, e.g., `screen -S YYYYmmdd`
-3. Add a second screen window (`^a c`)
-4. Start the `allocate.sh` in this window
-5. Change back to initial window (`^a 0`)
-6. Submit the workflow stage(s) and/or HiPS maps scripts
+1. Start screen session, e.g., `screen -S YYYYmmdd`
+1. Configure shell (`source common.sh`; `source setup_stack.sh`)
+1. Add a second screen window (`^a c`) and configure the shell.
+1. Start the `allocate.sh` in this window
+1. Change back to initial window (`^a 0`)
+1. Submit the workflow stage(s) and/or HiPS maps scripts (see `wrapper.sh`).
+
+### Reentry and Idempotency
+Reentry to the workflow scripts is idempotent as long as the nominal logfile for the stage exists and is non-zero in size. To force reentry with restart, remove or rename the logfile. The function `rotate` is available for this purpose, but be aware it rotates every available log file.
+
+If the workflow was previously completed successfully, the JSON file associated with this status (e.g., from `pipetask report`) will prevent the workflow from running again. 
 
 ## Contents
 
@@ -73,7 +79,7 @@ This filter checks high-level values in the DagStatus and sets an exit code.
 - `1`: The workflow is not successful or there are any failures.
 - `9`: The workflow is nominal and still running.
 
-This filter can be used in a loop to watch the Workflow status:
+This filter can be used in a loop to watch the Workflow status, a pattern used in the scripts.
 
 ```
 while true
@@ -82,7 +88,7 @@ do
     EC=$?
     case $EC in
         0) break;;
-        1) break;;
+        1) echo "Workflow reported failed tasks"; break;;
         9) date; python ./node_status_parser.py --file ${LOGPATH}/${LOGFILE} | jq -f ./node_status.jq;;
         *) echo "Unknown status"; break;;
     esac
