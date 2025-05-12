@@ -1,0 +1,5 @@
+# Allow using ls instead of find for locating files
+disable=SC2012
+
+# Do not follow or check dynamic files or paths to third-party content
+disable=SC1091
