@@ -1,8 +1,8 @@
 #!/bin/bash
-set -e
+export WORKDIR={{ cookiecutter.nv_root }}/{{ cookiecutter.working_dir }}
 
 echo "Running stack setup"
-source ./common.sh
+source ${WORKDIR}/common.sh
 
 if [ -z "${LSST_DISTRIB_DIR}" ]; then
     echo "Executing loadLSST.sh"
@@ -10,9 +10,11 @@ if [ -z "${LSST_DISTRIB_DIR}" ]; then
 
     echo "Setting up distribution (lsst_distrib)"
     setup lsst_distrib -t "${LSST_VERSION}"
-    eups list -s lsst_distrib
+else
+    echo "Stack already or partially set up."
 fi
 
 export LSST_S3_USE_THREADS=False
 
+eups list -s lsst_distrib
 echo "End of stack setup"

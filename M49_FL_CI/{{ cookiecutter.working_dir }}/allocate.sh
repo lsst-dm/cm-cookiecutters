@@ -2,7 +2,7 @@
 set -eo pipefail
 
 source ./common.sh
-source ./setup_lasstcam.sh
+source ./setup_stack.sh
 
 # (nodes * cores) % 120 == 0
 # exclusive-user means nodes may not be shared with other user glide-ins

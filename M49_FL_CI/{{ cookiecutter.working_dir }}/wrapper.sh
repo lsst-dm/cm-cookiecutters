@@ -1,5 +1,4 @@
 #!/bin/bash
-set -eo pipefail
 
 source ./common.sh
 source ./setup_stack.sh

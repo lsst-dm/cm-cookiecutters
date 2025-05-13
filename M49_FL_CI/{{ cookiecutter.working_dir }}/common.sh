@@ -19,6 +19,7 @@ test -f {{ cookiecutter.nv_root }}/.env && source {{ cookiecutter.nv_root }}/.en
 test -f "${WORKDIR}"/.env && source "${WORKDIR}"/.env
 
 export LSST_DISTRIB={{ cookiecutter.lsst_distrib_dir }}
+export PROJECTROOT={{ cookiecutter.nv_root }}
 export WORKDIR={{ cookiecutter.nv_root }}/{{ cookiecutter.working_dir }}
 export SCREENRC=${WORKDIR}/etc/screenrc
 export LOGPATH=${WORKDIR}/logs
