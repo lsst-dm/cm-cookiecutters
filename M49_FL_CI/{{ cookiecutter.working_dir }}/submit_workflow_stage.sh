@@ -71,8 +71,8 @@ if [[ (! -s ${WORKDIR}/${BASENAME}.json) ]]; then
     pipetask report embargo "${QG}" --force-v2 --full-output-filename "./${JSONFILE}" &> "${LOGPATH}/pipetask_report_${BASENAME}.log"
     EC=$?
     test $EC -eq 0 || echo "WARNING: ${BASENAME} pipetask report exited with code ${EC}"
+    MESSAGE="FL CI M49 - ${LSST_VERSION} Workflow ${BASENAME} Finished."
+    notify
 fi
 
-MESSAGE="FL CI M49 - ${LSST_VERSION} Workflow ${BASENAME} Finished."
-notify
 echo "$MESSAGE"

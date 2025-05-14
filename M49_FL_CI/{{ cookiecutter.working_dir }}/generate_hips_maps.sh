@@ -18,7 +18,7 @@ echo "BUILDING HiPS Warp Graph"
 LOGFILE=m49_fl_ci_hips-build-warp.log
 if [[ ! -s "$HIPS_QGRAPH_FILE" ]]; then
     build-high-resolution-hips-qg build -b embargo -p 01_pipeline_hips_warp.yaml \
-    --input "${COLLECTION}" --output "${HIPS_COLLECTION}" --pixels "$FIXED_PIXELS" -q "$HIPS_QGRAPH_FILE" -o 1 2>&1 | tee "${LOGPATH}/${LOGFILE}"
+    --input "${COLLECTION}" --output "${HIPS_COLLECTION}" --pixels $FIXED_PIXELS -q "$HIPS_QGRAPH_FILE" -o 1 2>&1 | tee "${LOGPATH}/${LOGFILE}"
     EC=$?
     test $EC -eq 0 || echo "QGraph Builder Had a Non-Zero Exit Code: ${LOGPATH}/${LOGFILE}"
     test $EC -eq 0 || exit 1
@@ -50,7 +50,7 @@ do
 done
 set -e
 
-WORKFLOW_STATUS=$(python ./node_status_parser.py --file "${LOGPATH}/${LOGFILE}")
+WORKFLOW_STATUS=$(python ../node_status_parser.py --file "${LOGPATH}/${LOGFILE}")
 echo "$WORKFLOW_STATUS" | jq . | tee "${WORKDIR}/${JSONFILE}"
 
 ################################################################################
@@ -60,6 +60,8 @@ JSONFILE="$(basename $LOGFILE .log).json"
 if [[ (! -s "${LOGPATH}/${LOGFILE}") && (! -s "${WORKDIR}/${JSONFILE}") ]]; then
     echo "RUNNING HiPS Rasterize Graph"
     bps submit 02_bps_hips_raster.yaml  2>&1 | tee "${LOGPATH}/${LOGFILE}"
+    MESSAGE="FL CI M49 - ${LSST_VERSION} HiPS maps starting"
+    notify
 fi
 
 # Loop until the exit code is 0
@@ -78,13 +80,16 @@ do
     sleep 900
 done
 set -e
-WORKFLOW_STATUS=$(python ./node_status_parser.py --file "${LOGPATH}/${LOGFILE}")
-echo "$WORKFLOW_STATUS" | jq . | tee "${WORKDIR}/${JSONFILE}"
 
 ################################################################################
 # Finished
-MESSAGE="FL CI M49 - ${LSST_VERSION} HiPS maps Finished: ${HIPS_OUTPUT_URI}"
-notify
-echo "$MESSAGE"
+WORKFLOW_STATUS=$(python ../node_status_parser.py --file "${LOGPATH}/${LOGFILE}")
+echo "$WORKFLOW_STATUS"
+if [[ ! -s "${WORKDIR}/${JSONFILE}" ]]; then
+    echo "$WORKFLOW_STATUS" | jq . > "${WORKDIR}/${JSONFILE}"
+
+    MESSAGE="FL CI M49 - ${LSST_VERSION} HiPS maps Finished: ${HIPS_OUTPUT_URI}"
+    notify
+fi
 
 popd
