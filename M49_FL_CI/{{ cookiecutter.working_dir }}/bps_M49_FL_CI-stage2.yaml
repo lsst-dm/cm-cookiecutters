@@ -25,6 +25,7 @@ includeConfigs:
   - ${DRP_PIPE_DIR}/bps/caching/LSSTCam/usdf/DRP-caching.yaml
   - ${DRP_PIPE_DIR}/bps/clustering/LSSTCam/DRP-clustering.yaml
   - ${DRP_PIPE_DIR}/bps/resources/LSSTCam/DRP.yaml
+  - ${WORKDIR}/bps_resources-stage2.yaml
 
 ########################################
 # SUBMISSION ENVIRONMENT VARIABLES
@@ -37,7 +38,7 @@ environment:
 # BPS PAYLOAD OPTIONS
 ########################################
 payload:
-  inCollection: LSSTCam/runs/M49-FL-CI/inputs/DM-50783,LSSTCam/calib,refcats,skymaps,pretrained_models
+  inCollection: u/lskelvin/DM-50806,LSSTCam/runs/M49-FL-CI/inputs/DM-50783,LSSTCam/calib,refcats,skymaps,pretrained_models
   output: LSSTCam/runs/M49-FL-CI/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number }}
   butlerConfig: /repo/embargo
   dataQuery: "instrument='LSSTCam' AND skymap='lsst_cells_v1'"

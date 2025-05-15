@@ -37,7 +37,7 @@ environment:
 # BPS PAYLOAD OPTIONS
 ########################################
 payload:
-  inCollection: LSSTCam/runs/M49-FL-CI/inputs/DM-50783,LSSTCam/calib,refcats,skymaps,pretrained_models
+  inCollection: u/lskelvin/DM-50806,LSSTCam/runs/M49-FL-CI/inputs/DM-50783,LSSTCam/calib,refcats,skymaps,pretrained_models
   output: LSSTCam/runs/M49-FL-CI/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number }}
   butlerConfig: /repo/embargo
   dataQuery: "instrument='LSSTCam' AND skymap='lsst_cells_v1' AND tract=10804"
