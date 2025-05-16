@@ -1,5 +1,0 @@
-pipetask:
-  skyCorr:
-    requestMemory: 40000
-  skyCorrExperimental:
-    requestMemory: 40000

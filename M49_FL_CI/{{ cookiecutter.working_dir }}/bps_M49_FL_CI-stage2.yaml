@@ -25,7 +25,6 @@ includeConfigs:
   - ${DRP_PIPE_DIR}/bps/caching/LSSTCam/usdf/DRP-caching.yaml
   - ${DRP_PIPE_DIR}/bps/clustering/LSSTCam/DRP-clustering.yaml
   - ${DRP_PIPE_DIR}/bps/resources/LSSTCam/DRP.yaml
-  - ${WORKDIR}/bps_resources-stage2.yaml
 
 ########################################
 # SUBMISSION ENVIRONMENT VARIABLES
