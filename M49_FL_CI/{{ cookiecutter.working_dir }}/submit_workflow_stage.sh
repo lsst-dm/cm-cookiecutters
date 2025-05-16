@@ -68,9 +68,11 @@ if [[ (! -s ${WORKDIR}/${BASENAME}.json) ]]; then
     echo "Running pipetask report for ${BASENAME}"
     read -r SD QG < <(echo "$WORKFLOW_STATUS" | jq -r '[.bps_submit_directory, .qgraph_file]|join(" ")')
     test -n "${QG}" || { echo "ERROR: No QG file could be inferred from submit directory ${SD}"; exit 1; }
+    set +e
     pipetask report embargo "${QG}" --force-v2 --full-output-filename "./${JSONFILE}" &> "${LOGPATH}/pipetask_report_${BASENAME}.log"
     EC=$?
     test $EC -eq 0 || echo "WARNING: ${BASENAME} pipetask report exited with code ${EC}"
+    set -e
     MESSAGE="FL CI M49 - ${LSST_VERSION} Workflow ${BASENAME} Finished."
     notify
 fi
