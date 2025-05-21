@@ -1,0 +1,80 @@
+########################################
+# https://rubinobs.atlassian.net/browse/{{ cookiecutter.jira_ticket_number }}
+# {{ cookiecutter.project_name }}
+########################################
+project: {{ cookiecutter.jira_ticket_number }}
+campaign: {{ cookiecutter.jira_ticket_number }}
+submitPath: "{{ cookiecutter.nv_root }}/submit/{{ cookiecutter.jira_ticket_number }}/${LSST_VERSION}/stage1/{timestamp}"
+
+########################################
+# LSST SETUP
+########################################
+LSST_VERSION: ${LSST_VERSION}
+
+########################################
+# BPS VARIABLES
+########################################
+subDirTemplate: "{label}/{detector}"
+OWNER: "lsstsvc1"
+
+########################################
+# PIPELINE CONFIGURATION
+########################################
+pipelineYaml: "${DRP_PIPE_DIR}/pipelines/LSSTCam/nightly-validation.yaml#step1a-single-visit-detectors
+
+includeConfigs:
+  - /sdf/data/rubin/shared/campaigns/LSSTCam-Nightly-Validation/nightly-validation-LSSTCam-clustering.yaml
+  - /sdf/data/rubin/shared/campaigns/LSSTCam-Nightly-Validation/nightly-validation-LSSTCam-DDF.yaml
+
+########################################
+# SUBMISSION ENVIRONMENT VARIABLES
+########################################
+environment:
+  LSST_S3_USE_THREADS: False
+  LSST_RESOURCES_EXECUTOR: process
+  DAF_BUTLER_CACHE_EXPIRATION_MODE: disabled
+
+########################################
+# CLUSTERING CONFIGURATION
+########################################
+cluster
+  step1detector:
+    equalDimensions: exposure:visit
+    partitionDimensions: exposure
+    partitionMaxClusters: 10000
+    environment:
+      DAF_BUTLER_CONFIG_PATH: /sdf/data/rubin/shared/campaigns/LSSTCam-Nightly-Validation/butler_config/step1:${DAF_BUTLER_CONFIG_PATH}
+      DAF_BUTLER_CACHE_EXPIRATION_MODE: size=1_000_000_000_000
+      DAF_BUTLER_CACHE_DIRECTORY: /lscratch/${USER}/step1_cache
+  makeWarpTract:
+    environment
+      DAF_BUTLER_CONFIG_PATH: /sdf/data/rubin/shared/campaigns/LSSTCam-Nightly-Validation/butler_config/step3:${DAF_BUTLER_CONFIG_PATH
+      DAF_BUTLER_CACHE_EXPIRATION_MODE: datasets=500
+  coadd
+    environment:
+      DAF_BUTLER_CONFIG_PATH: /sdf/data/rubin/shared/campaigns/LSSTCam-Nightly-Validation/butler_config/step3:${DAF_BUTLER_CONFIG_PATH}
+      DAF_BUTLER_CACHE_EXPIRATION_MODE: datasets=500
+
+
+########################################
+# BPS PAYLOAD OPTIONS
+########################################
+payload:
+  payloadName: lsstcam_nightly
+  inCollection: LSSTCam/runs/nightlyValidation
+  output: LSSTCam/runs/nightlyValidation/${NIGHTLY_START}/${LSST_DISTRIB}/{{ cookiecutter.jira_ticket_number }}
+  butlerConfig: /repo/embargo+sasquatch_dev
+  dataQuery: "instrument='LSSTCam' AND exposure.day_obs=${NIGHTLY_START} AND exposure.observation_type IN ('science', 'acq') AND skymap='lsst_cells_v1' AND detector NOT IN (120, 121, 122) AND detector < 189"
+
+
+# extraRunQuantumOptions: "--no-raise-on-partial-outputs"
+extraQgraphOptions: --dataset-query-constraint off --skip-existing-in LSSTCam/runs/nightlyValidation -c parameters:sasquatch_dataset_identifier=LSSTCam/nightlyValidation -c parameters:sasquatch_timestamp_version=explicit_timestamp:${SASQ_TIMESTAMP}T000000Z
+
+retryUnlessExit: [2]
+numberOfRetries: 3   # 5 is probably too much.
+requestMemory: 4096  # reduce prob that we'll burn a retry memory
+
+########################################
+# SITE WMS CONFIGURATION
+########################################
+wmsServiceClass: lsst.ctrl.bps.htcondor.HTCondorService

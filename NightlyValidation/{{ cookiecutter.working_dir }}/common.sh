@@ -1,0 +1,44 @@
+# shellcheck shell=bash
+
+notify () {
+    # send slack notification ${MESSAGE} using ${SLACK_WEBHOOK_URL} if one is defined.
+    test -n "${SLACK_WEBHOOK_URL}" || return
+    test -n "${MESSAGE}" || return
+    curl -X POST -H 'Content-type: application/json' --data '{"text":"'"${MESSAGE}"'"}' "${SLACK_WEBHOOK_URL}" &> /dev/null
+}
+
+rotate () {
+    # Rotates ALL logs in $LOGDIR
+    if [[ -f ${WORKDIR}/etc/logrotate.conf ]]; then
+        logrotate --state ${WORKDIR}/logrotate.status -f ${WORKDIR}/etc/logrotate.conf
+    fi
+}
+
+# source any .env file in PWD or its parent
+test -f {{ cookiecutter.nv_root }}/.env && source {{ cookiecutter.nv_root }}/.env
+test -f "${WORKDIR}"/.env && source "${WORKDIR}"/.env
+
+export LSST_DISTRIB={{ cookiecutter.lsst_distrib_dir }}
+export PROJECTROOT={{ cookiecutter.nv_root }}
+export WORKDIR={{ cookiecutter.nv_root }}/{{ cookiecutter.working_dir }}
+export SCREENRC=${WORKDIR}/etc/screenrc
+export LOGPATH=${WORKDIR}/logs
+
+if [ -f .lsst-version ]; then
+    LSST_VERSION=$(cat .lsst-version)
+else
+    LSST_VERSION=$(ls -1dt $LSST_DISTRIB/[dw]_latest | head -n 1)
+    LSST_VERSION=$(readlink -nf "$LSST_VERSION" | xargs -- basename)
+    echo "${LSST_VERSION}" > .lsst-version
+fi
+
+export LSST_VERSION
+export COLLECTION="LSSTCam/runs/nightlyValidation\/${LSST_DISTRIB}/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number }}"
+export OUT_COLLECTION="LSSTCam/runs/nightlyValidation\/${LSST_DISTRIB}/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number }}"
+export HIPS_COLLECTION="LSSTCam/runs/nightlyValidation\/${LSST_DISTRIB}/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number }}/hips"
+export HIPS_OUTPUT_URI="s3://embargo@rubin-views/${COLLECTION}"
+
+export HIPS_QGRAPH_FILE="nightly_validation_hips_warp.qgraph"
+export FIXED_PIXELS="25 27 28 36 37 40 41 42 43"
+
+mkdir -p ${LOGPATH}

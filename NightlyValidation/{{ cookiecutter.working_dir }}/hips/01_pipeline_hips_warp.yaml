@@ -1,0 +1,7 @@
+description: Run HighResolutionHipsTask
+instrument: lsst.obs.lsst.LsstCam
+tasks:
+  highResolutionHips9:
+    class: lsst.pipe.tasks.hips.HighResolutionHipsTask
+    config:
+      connections.coadd_exposure_handles: deep_coadd_predetection
