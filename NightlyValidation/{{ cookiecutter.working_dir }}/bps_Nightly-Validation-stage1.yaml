@@ -62,9 +62,9 @@ cluster
 payload:
   payloadName: lsstcam_nightly
   inCollection: LSSTCam/runs/nightlyValidation
-  output: LSSTCam/runs/nightlyValidation/${NIGHTLY_START}/${LSST_DISTRIB}/{{ cookiecutter.jira_ticket_number }}
+  output: LSSTCam/runs/nightlyValidation/{{ cookiecutter.obs_day }}/${LSST_DISTRIB}/{{ cookiecutter.jira_ticket_number }}
   butlerConfig: /repo/embargo+sasquatch_dev
-  dataQuery: "instrument='LSSTCam' AND exposure.day_obs=${NIGHTLY_START} AND exposure.observation_type IN ('science', 'acq') AND skymap='lsst_cells_v1' AND detector NOT IN (120, 121, 122) AND detector < 189"
+  dataQuery: "instrument='LSSTCam' AND exposure.day_obs={{ cookiecutter.obs_day }} AND exposure.observation_type IN ('science', 'acq') AND skymap='lsst_cells_v1' AND detector NOT IN (120, 121, 122) AND detector < 189"
 
 
 # extraRunQuantumOptions: "--no-raise-on-partial-outputs"

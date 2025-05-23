@@ -23,6 +23,7 @@ export PROJECTROOT={{ cookiecutter.nv_root }}
 export WORKDIR={{ cookiecutter.nv_root }}/{{ cookiecutter.working_dir }}
 export SCREENRC=${WORKDIR}/etc/screenrc
 export LOGPATH=${WORKDIR}/logs
+export SASQ_TIMESTAMP=`date -d '{{ cookiecutter.obs_day }}+1 day' '+%Y%m%d'`
 
 if [ -f .lsst-version ]; then
     LSST_VERSION=$(cat .lsst-version)

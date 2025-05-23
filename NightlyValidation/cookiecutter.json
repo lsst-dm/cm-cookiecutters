@@ -1,8 +1,8 @@
 {
-    "project_name": "Nightly CI for M49 FL",
-    "jira_ticket_number": "DM-50783",
+    "project_name": "nightlyValidation",
+    "jira_ticket_number": "DM-50157",
     "lsst_distrib_dir": "/sdf/group/rubin/sw",
-    "nv_root": "/sdf/data/rubin/shared/campaigns/LSSTCam-M49-FL-CI",
+    "nv_root": "/sdf/data/rubin/shared/campaigns/LSSTCam-Nightly-Validation-CC",
     "obs_day": "{{ cookiecutter.obs_day }}",
     "working_dir": "{{ cookiecutter.jira_ticket_number }}_{{ cookiecutter.obs_day }}"
 }
