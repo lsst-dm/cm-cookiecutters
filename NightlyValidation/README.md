@@ -1,4 +1,4 @@
-# M49 FL CI
+# Nightly Validation
 
 ## Variables
 
@@ -8,7 +8,7 @@
 
 ## Setup
 - Navigate to the root directory for the rendered cookies. This should be the `nv_root` but may be any directory.
-- `cookiecutter https://github.com/lsst-dm/cm-cookiecutters.git --directory="M49_FL_CI" obs_day=$(date '+%Y%m%d')`
+-  cookiecutter https://github.com/lsst-dm/cm-cookiecutters.git --directory="NightlyValidation" obs_day=20250522
 
 ## Using
 1. Navigate to working directory.
