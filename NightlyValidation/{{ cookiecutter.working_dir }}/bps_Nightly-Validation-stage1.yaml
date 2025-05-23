@@ -4,7 +4,7 @@
 ########################################
 project: {{ cookiecutter.jira_ticket_number }}
 campaign: {{ cookiecutter.jira_ticket_number }}
-submitPath: "{{ cookiecutter.nv_root }}/submit/{{ cookiecutter.jira_ticket_number }}/${LSST_VERSION}/stage1/{timestamp}"
+#submitPath: "{{ cookiecutter.nv_root }}/submit/{{ cookiecutter.jira_ticket_number }}/${LSST_VERSION}/stage1/{timestamp}"
 
 ########################################
 # LSST SETUP
@@ -20,7 +20,7 @@ OWNER: "lsstsvc1"
 ########################################
 # PIPELINE CONFIGURATION
 ########################################
-pipelineYaml: "${DRP_PIPE_DIR}/pipelines/LSSTCam/nightly-validation.yaml#step1a-single-visit-detectors
+pipelineYaml: "${DRP_PIPE_DIR}/pipelines/LSSTCam/nightly-validation.yaml#step1a-single-visit-detectors"
 
 includeConfigs:
   - /sdf/data/rubin/shared/campaigns/LSSTCam-Nightly-Validation/nightly-validation-LSSTCam-clustering.yaml
@@ -37,7 +37,7 @@ environment:
 ########################################
 # CLUSTERING CONFIGURATION
 ########################################
-cluster
+cluster:
   step1detector:
     equalDimensions: exposure:visit
     partitionDimensions: exposure
@@ -47,10 +47,10 @@ cluster
       DAF_BUTLER_CACHE_EXPIRATION_MODE: size=1_000_000_000_000
       DAF_BUTLER_CACHE_DIRECTORY: /lscratch/${USER}/step1_cache
   makeWarpTract:
-    environment
-      DAF_BUTLER_CONFIG_PATH: /sdf/data/rubin/shared/campaigns/LSSTCam-Nightly-Validation/butler_config/step3:${DAF_BUTLER_CONFIG_PATH
+    environment:
+      DAF_BUTLER_CONFIG_PATH: /sdf/data/rubin/shared/campaigns/LSSTCam-Nightly-Validation/butler_config/step3:${DAF_BUTLER_CONFIG_PATH}
       DAF_BUTLER_CACHE_EXPIRATION_MODE: datasets=500
-  coadd
+  coadd:
     environment:
       DAF_BUTLER_CONFIG_PATH: /sdf/data/rubin/shared/campaigns/LSSTCam-Nightly-Validation/butler_config/step3:${DAF_BUTLER_CONFIG_PATH}
       DAF_BUTLER_CACHE_EXPIRATION_MODE: datasets=500
@@ -60,14 +60,14 @@ cluster
 # BPS PAYLOAD OPTIONS
 ########################################
 payload:
-  payloadName: lsstcam_nightly
+#  payloadName: lsstcam_nightly
   inCollection: LSSTCam/runs/nightlyValidation
   output: LSSTCam/runs/nightlyValidation/{{ cookiecutter.obs_day }}/${LSST_DISTRIB}/{{ cookiecutter.jira_ticket_number }}
   butlerConfig: /repo/embargo+sasquatch_dev
   dataQuery: "instrument='LSSTCam' AND exposure.day_obs={{ cookiecutter.obs_day }} AND exposure.observation_type IN ('science', 'acq') AND skymap='lsst_cells_v1' AND detector NOT IN (120, 121, 122) AND detector < 189"
 
 
-# extraRunQuantumOptions: "--no-raise-on-partial-outputs"
+extraRunQuantumOptions: "--no-raise-on-partial-outputs"
 extraQgraphOptions: --dataset-query-constraint off --skip-existing-in LSSTCam/runs/nightlyValidation -c parameters:sasquatch_dataset_identifier=LSSTCam/nightlyValidation -c parameters:sasquatch_timestamp_version=explicit_timestamp:${SASQ_TIMESTAMP}T000000Z
 
 retryUnlessExit: [2]
