@@ -62,7 +62,7 @@ cluster:
 payload:
 #  payloadName: lsstcam_nightly
   inCollection: LSSTCam/runs/nightlyValidation
-  output: LSSTCam/runs/nightlyValidation/{{ cookiecutter.obs_day }}/${LSST_DISTRIB}/{{ cookiecutter.jira_ticket_number }}
+  output: LSSTCam/runs/nightlyValidation/{{ cookiecutter.obs_day }}/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number }}
   butlerConfig: /repo/embargo+sasquatch_dev
   dataQuery: "instrument='LSSTCam' AND skymap='lsst_cells_v1' AND day_obs={{ cookiecutter.obs_day }}"
 
