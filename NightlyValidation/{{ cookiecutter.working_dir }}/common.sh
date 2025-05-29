@@ -34,9 +34,9 @@ else
 fi
 
 export LSST_VERSION
-export COLLECTION="LSSTCam/runs/nightlyValidation\/${LSST_DISTRIB}/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number }}"
-export OUT_COLLECTION="LSSTCam/runs/nightlyValidation\/${LSST_DISTRIB}/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number }}"
-export HIPS_COLLECTION="LSSTCam/runs/nightlyValidation\/${LSST_DISTRIB}/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number }}/hips"
+export COLLECTION="LSSTCam/runs/nightlyValidation/{{ cookiecutter.obs_day }}/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number }}"
+export OUT_COLLECTION="LSSTCam/runs/nightlyValidation/{{ cookiecutter.obs_day }}/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number }}"
+export HIPS_COLLECTION="LSSTCam/runs/nightlyValidation/{{ cookiecutter.obs_day }}/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number }}/hips"
 export HIPS_OUTPUT_URI="s3://embargo@rubin-views/${COLLECTION}"
 
 export HIPS_QGRAPH_FILE="nightly_validation_hips_warp.qgraph"

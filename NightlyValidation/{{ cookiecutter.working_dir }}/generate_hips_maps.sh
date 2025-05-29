@@ -11,7 +11,7 @@ pushd $WORKDIR/hips
 ################################################################################
 # First get the survey segments (pixels) or use the FIXED_PIXELS list
 # build-high-resolution-hips-qg segment -b embargo -p 01_pipeline_hips_warp.yaml -i "$COLLECTION" -o 1
-
+export FIXED_PIXELS=`build-high-resolution-hips-qg segment -b embargo -p 01_pipeline_hips_warp.yaml -i "$COLLECTION" -o 1 | awk '{if ($1!="Pixels") printf("%s ",$1) }'`
 ################################################################################
 # Build the graph
 echo "BUILDING HiPS Warp Graph"
