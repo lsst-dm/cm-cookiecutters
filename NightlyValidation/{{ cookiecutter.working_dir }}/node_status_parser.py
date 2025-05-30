@@ -27,6 +27,7 @@ DAG_STATUS = (
     r"NodesTotal\s*=\s*(?P<nodesTotal>\d*?)\s*;.*?"
     r"NodesDone\s*=\s*(?P<nodesDone>\d*?)\s*;.*?"
     r"NodesPre\s*=\s*(?P<nodesPre>\d*?)\s*;.*?"
+    r"NodesFutile\s*=\s*(?P<nodesFutile>\d*?)\s*;.*?"
     r"NodesFailed\s*=\s*(?P<nodesFailed>\d*?)\s*;.*?"
 )
 

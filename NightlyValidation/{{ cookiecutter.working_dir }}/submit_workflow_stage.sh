@@ -39,8 +39,9 @@ echo "Using distribution: ${LSST_VERSION}"
 if [[ (! -s "${LOGPATH}/${LOGFILE}") && (! -s "${WORKDIR}/${JSONFILE}") ]]; then
     echo "Submitting BPS Workflow ${WORKFLOW}"
     time bps submit "${WORKDIR}/${WORKFLOW}" 2>&1 | tee "${LOGPATH}/${LOGFILE}"
-    MESSAGE="Nightly Validation - ${LSST_VERSION} Workflow ${BASENAME} Submitted."
-    notify
+    echo "Nightly Validation - ${LSST_VERSION} Workflow ${BASENAME} Submitted."
+#    MESSAGE="Nightly Validation - ${LSST_VERSION} Workflow ${BASENAME} Submitted."
+#    notify
 fi
 
 # Loop until the exit code is 0
@@ -51,9 +52,11 @@ do
     wstatus=$(python ./node_status_parser.py --file "${LOGPATH}/${LOGFILE}" | jq -r -f ./workflow_status_no_ec.jq)
     echo "workflow status = "$wstatus
     if [[ $wstatus == *"running"* ]]; then
-	date; python ./node_status_parser.py --file "${LOGPATH}/${LOGFILE}" | jq -f ./node_status.jq;;
+	date; python ./node_status_parser.py --file "${LOGPATH}/${LOGFILE}" | jq -f ./node_status.jq
+    else
+	break
     fi
-    sleep 900
+    sleep 60
 done
 set -e
 
