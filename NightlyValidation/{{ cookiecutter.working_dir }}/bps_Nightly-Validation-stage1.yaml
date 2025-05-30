@@ -4,7 +4,6 @@
 ########################################
 project: {{ cookiecutter.jira_ticket_number }}
 campaign: {{ cookiecutter.jira_ticket_number }}
-#submitPath: "{{ cookiecutter.nv_root }}/submit/{{ cookiecutter.jira_ticket_number }}/${LSST_VERSION}/stage1/{timestamp}"
 
 ########################################
 # LSST SETUP
@@ -23,8 +22,8 @@ OWNER: "lsstsvc1"
 pipelineYaml: "${DRP_PIPE_DIR}/pipelines/LSSTCam/nightly-validation.yaml#step1a-single-visit-detectors"
 
 includeConfigs:
-  - /sdf/data/rubin/shared/campaigns/LSSTCam-Nightly-Validation/nightly-validation-LSSTCam-clustering.yaml
-  - /sdf/data/rubin/shared/campaigns/LSSTCam-Nightly-Validation/nightly-validation-LSSTCam-DDF.yaml
+  - {{ cookiecutter.nv_root }}/{{ cookiecutter.working_dir }}/nightly-validation-LSSTCam-clustering.yaml
+  - {{ cookiecutter.nv_root }}/{{ cookiecutter.working_dir }}/nightly-validation-LSSTCam-DDF.yaml
 
 ########################################
 # SUBMISSION ENVIRONMENT VARIABLES
@@ -43,16 +42,16 @@ cluster:
     partitionDimensions: exposure
     partitionMaxClusters: 10000
     environment:
-      DAF_BUTLER_CONFIG_PATH: /sdf/data/rubin/shared/campaigns/LSSTCam-Nightly-Validation/butler_config/step1:${DAF_BUTLER_CONFIG_PATH}
+      DAF_BUTLER_CONFIG_PATH: {{ cookiecutter.nv_root }}/{{ cookiecutter.working_dir }}/butler_config/step1:${DAF_BUTLER_CONFIG_PATH}
       DAF_BUTLER_CACHE_EXPIRATION_MODE: size=1_000_000_000_000
       DAF_BUTLER_CACHE_DIRECTORY: /lscratch/${USER}/step1_cache
   makeWarpTract:
     environment:
-      DAF_BUTLER_CONFIG_PATH: /sdf/data/rubin/shared/campaigns/LSSTCam-Nightly-Validation/butler_config/step3:${DAF_BUTLER_CONFIG_PATH}
+      DAF_BUTLER_CONFIG_PATH: {{ cookiecutter.nv_root }}/{{ cookiecutter.working_dir }}/butler_config/step3:${DAF_BUTLER_CONFIG_PATH}
       DAF_BUTLER_CACHE_EXPIRATION_MODE: datasets=500
   coadd:
     environment:
-      DAF_BUTLER_CONFIG_PATH: /sdf/data/rubin/shared/campaigns/LSSTCam-Nightly-Validation/butler_config/step3:${DAF_BUTLER_CONFIG_PATH}
+      DAF_BUTLER_CONFIG_PATH: {{ cookiecutter.nv_root }}/{{ cookiecutter.working_dir }}/butler_config/step3:${DAF_BUTLER_CONFIG_PATH}
       DAF_BUTLER_CACHE_EXPIRATION_MODE: datasets=500
 
 
