@@ -48,14 +48,11 @@ set +e
 while true
 do
     test -s "${LOGPATH}/${LOGFILE}" || { sleep 60; continue; }
-    python ./node_status_parser.py --file "${LOGPATH}/${LOGFILE}" | jq -e -f ./workflow_status.jq
-    EC=$?
-    case $EC in
-        0) break;;
-        1) continue;;  # ignore workflow failures
-        9) date; python ./node_status_parser.py --file "${LOGPATH}/${LOGFILE}" | jq -f ./node_status.jq;;
-        *) echo "Unknown status"; exit 1;;
-    esac
+    wstatus=$(python ./node_status_parser.py --file "${LOGPATH}/${LOGFILE}" | jq -r -f ./workflow_status_no_ec.jq)
+    echo "workflow status = "$wstatus
+    if [[ $wstatus == *"running"* ]]; then
+	date; python ./node_status_parser.py --file "${LOGPATH}/${LOGFILE}" | jq -f ./node_status.jq;;
+    fi
     sleep 900
 done
 set -e
