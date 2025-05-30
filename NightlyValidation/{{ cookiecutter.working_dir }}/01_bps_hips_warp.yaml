@@ -5,7 +5,7 @@
 ########################################
 project: {{ cookiecutter.jira_ticket_number }}
 campaign: {{ cookiecutter.jira_ticket_number }}
-submitPath: "{{ cookiecutter.nv_root }}/submit/{{ cookiecutter.jira_ticket_number }}/${LSST_VERSION}/hips/{timestamp}"
+submitPath: "{{ cookiecutter.nv_root }}/{{ cookiecutter.working_dir }}/submit/{{ cookiecutter.jira_ticket_number }}/${LSST_VERSION}/hips/{timestamp}"
 
 ########################################
 # PIPELINE CONFIGURATION
