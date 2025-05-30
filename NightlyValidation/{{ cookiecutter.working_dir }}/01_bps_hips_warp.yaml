@@ -16,7 +16,7 @@ qgraphFile: ${HIPS_QGRAPH_FILE}
 # BPS PAYLOAD OPTIONS
 ########################################
 payload:
-  inCollection: LSSTCam/runs/M49-FL-CI/${LSST_VERSION}/{{ cookiecutter.jira_ticket_number }}
+  inCollection: ${COLLECTION}
   output: ${HIPS_COLLECTION}
   butlerConfig: embargo
 
