@@ -54,7 +54,10 @@ do
     if [[ $wstatus == *"running"* ]]; then
 	date; python ./node_status_parser.py --file "${LOGPATH}/${LOGFILE}" | jq -f ./node_status.jq
     else
-	break
+	if [[ $wstatus == *"Workflow"* ]]; then
+	    echo "Workflow no longer running"
+	    break
+	fi
     fi
     sleep 60
 done
