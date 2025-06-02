@@ -44,6 +44,7 @@ if [[ (! -s "${LOGPATH}/${LOGFILE}") && (! -s "${WORKDIR}/${JSONFILE}") ]]; then
 #    notify
 fi
 
+export wfstarted=0
 # Loop until the exit code is 0
 set +e
 while true
@@ -53,10 +54,17 @@ do
     echo "workflow status = "$wstatus
     if [[ $wstatus == *"running"* ]]; then
 	date; python ./node_status_parser.py --file "${LOGPATH}/${LOGFILE}" | jq -f ./node_status.jq
+	export wfstarted=1
     else
 	if [[ $wstatus == *"Workflow"* ]]; then
-	    echo "Workflow no longer running"
+	    echo "Workflow no longer running. status = "$wstatus
 	    break
+	fi
+	if [[ $wstatus == "" ]]; then
+	    if [[ $wfstarted == 1 ]]; then
+		echo "Workflow no longer running"
+		break
+	    fi
 	fi
     fi
     sleep 60
