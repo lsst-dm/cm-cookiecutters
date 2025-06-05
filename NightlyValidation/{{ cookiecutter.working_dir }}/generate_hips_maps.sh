@@ -6,7 +6,11 @@ set -eo pipefail
 
 source ./common.sh
 
+echo "value of WORKDIR="${WORKDIR}
+
 pushd $WORKDIR/hips
+
+pwd
 
 ################################################################################
 # First get the survey segments (pixels) or use the FIXED_PIXELS list
@@ -60,8 +64,9 @@ JSONFILE="$(basename $LOGFILE .log).json"
 if [[ (! -s "${LOGPATH}/${LOGFILE}") && (! -s "${WORKDIR}/${JSONFILE}") ]]; then
     echo "RUNNING HiPS Rasterize Graph"
     bps submit 02_bps_hips_raster.yaml  2>&1 | tee "${LOGPATH}/${LOGFILE}"
-    MESSAGE="Nightly Validation - ${LSST_VERSION} HiPS maps starting"
-    notify
+    echo "Nightly Validation - ${LSST_VERSION} HiPS maps starting"
+#    MESSAGE="Nightly Validation - ${LSST_VERSION} HiPS maps starting"
+#    notify
 fi
 
 # Loop until the exit code is 0
@@ -88,8 +93,9 @@ echo "$WORKFLOW_STATUS"
 if [[ ! -s "${WORKDIR}/${JSONFILE}" ]]; then
     echo "$WORKFLOW_STATUS" | jq . > "${WORKDIR}/${JSONFILE}"
 
-    MESSAGE="Nightly Validation - ${LSST_VERSION} HiPS maps Finished: ${HIPS_OUTPUT_URI}"
-    notify
+    echo "Nightly Validation - ${LSST_VERSION} HiPS maps Finished: ${HIPS_OUTPUT_URI}"
+#    MESSAGE="Nightly Validation - ${LSST_VERSION} HiPS maps Finished: ${HIPS_OUTPUT_URI}"
+#    notify
 fi
 
 popd

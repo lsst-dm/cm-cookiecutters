@@ -84,8 +84,9 @@ if [[ (! -s ${WORKDIR}/${BASENAME}.json) ]]; then
     EC=$?
     test $EC -eq 0 || echo "WARNING: ${BASENAME} pipetask report exited with code ${EC}"
     set -e
-    MESSAGE="Nightly Validation - ${LSST_VERSION} Workflow ${BASENAME} Finished."
-    notify
+    echo "Nightly Validation - ${LSST_VERSION} Workflow ${BASENAME} Finished."
+#    MESSAGE="Nightly Validation - ${LSST_VERSION} Workflow ${BASENAME} Finished."
+#    notify
 fi
 
 echo "$MESSAGE"
