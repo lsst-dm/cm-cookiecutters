@@ -111,4 +111,5 @@ Some topics of interest to cookiecutter developers to support more advanced use 
 
 - [Cookiecutter](https://www.cookiecutter.io)
 - [Cookiecutter Documentation](https://cookiecutter.readthedocs.io/en/stable/)
+- [Jinja Template Designer Documentation](https://jinja.palletsprojects.com/en/stable/templates/)
 - [uv](https://docs.astral.sh/uv/)
