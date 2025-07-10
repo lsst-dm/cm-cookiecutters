@@ -5,7 +5,9 @@ echo "Running stack setup"
 source ${WORKDIR}/common.sh
 
 echo "Executing loadLSST.sh"
-source "${LSST_DISTRIB}"/tag/"${LSST_VERSION}"/loadLSST.sh
+#source "${LSST_DISTRIB}"/tag/"${LSST_VERSION}"/loadLSST.sh
+#source /cvmfs/sw.lsst.eu/almalinux-x86_64/lsst_distrib/${LSST_VERSION}/loadLSST.bash
+source "${LSST_DISTRIB}"/"${LSST_VERSION}"/loadLSST.bash
 
 echo "Setting up distribution (lsst_distrib)"
 setup lsst_distrib -t "${LSST_VERSION}"
