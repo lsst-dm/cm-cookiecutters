@@ -12,6 +12,8 @@ source "${LSST_DISTRIB}"/"${LSST_VERSION}"/loadLSST.bash
 echo "Setting up distribution (lsst_distrib)"
 setup lsst_distrib -t "${LSST_VERSION}"
 
+setup -j -r /sdf/home/c/cslater/drp_pipe
+
 export LSST_S3_USE_THREADS=False
 
 eups list -s lsst_distrib
