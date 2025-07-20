@@ -1,7 +1,7 @@
 {
     "project_name": "nightlyValidation",
     "jira_ticket_number": "DM-50157",
-    "lsst_distrib_dir": "/sdf/group/rubin/sw",
+    "lsst_distrib_dir": "/cvmfs/sw.lsst.eu/almalinux-x86_64/lsst_distrib",
     "nv_root": "/sdf/data/rubin/shared/campaigns/LSSTCam-Nightly-Validation-CC",
     "obs_day": "{{ cookiecutter.obs_day }}",
     "working_dir": "{{ cookiecutter.jira_ticket_number }}_{{ cookiecutter.obs_day }}"
