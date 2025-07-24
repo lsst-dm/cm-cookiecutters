@@ -55,6 +55,12 @@ cluster:
       DAF_BUTLER_CONFIG_PATH: {{ cookiecutter.nv_root }}/{{ cookiecutter.working_dir }}/butler_config/step3:${DAF_BUTLER_CONFIG_PATH}
       DAF_BUTLER_CACHE_EXPIRATION_MODE: datasets=500
 
+########################################
+# FINALJOB
+########################################
+finalJob:
+  requestCpus: 10
+  numberOfRetries: 10
 
 ########################################
 # BPS PAYLOAD OPTIONS
