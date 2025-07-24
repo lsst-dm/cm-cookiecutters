@@ -19,7 +19,8 @@ OWNER: "lsstsvc1"
 ########################################
 # PIPELINE CONFIGURATION
 ########################################
-pipelineYaml: "${DRP_PIPE_DIR}/pipelines/LSSTCam/nightly-validation.yaml#step1b-single-visit-visits,step1c-single-visit-tracts,step1d-single-visit-global,stage3-coadd"
+#pipelineYaml: "${DRP_PIPE_DIR}/pipelines/LSSTCam/nightly-validation.yaml#step1b-single-visit-visits,step1c-single-visit-tracts,step1d-single-visit-global,stage3-coadd"
+pipelineYaml: "${DRP_PIPE_DIR}/pipelines/LSSTCam/nightly-validation.yaml#step1b-single-visit-visits,step1c-single-visit-tracts,step1d-single-visit-global"
 
 includeConfigs:
   - {{ cookiecutter.nv_root }}/{{ cookiecutter.working_dir }}/nightly-validation-LSSTCam-clustering.yaml
