@@ -61,7 +61,8 @@ cluster:
 finalJob:
   requestCpus: 10
   numberOfRetries: 10
-
+  requestMemory: 32768
+  
 ########################################
 # BPS PAYLOAD OPTIONS
 ########################################

@@ -49,5 +49,3 @@ pipetask:
     requestMemory: 4389
   standardizeObject:
     requestMemory: 7382
-  finalJob:
-    requestMemory: 32768
