@@ -1,3 +1,4 @@
+
 #!/bin/bash
 export WORKDIR={{ cookiecutter.nv_root }}/{{ cookiecutter.working_dir }}
 
@@ -13,7 +14,7 @@ echo "Setting up distribution (lsst_distrib)"
 setup lsst_distrib -t "${LSST_VERSION}"
 
 #setup -j -r /sdf/home/c/cslater/drp_pipe
-setup -j -r /sdf/data/rubin/user/homer/drp_pipe
+#setup -j -r /sdf/data/rubin/user/homer/drp_pipe
 
 export LSST_S3_USE_THREADS=False
 
