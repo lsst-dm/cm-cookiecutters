@@ -1,0 +1,108 @@
+{%- set lsst = cookiecutter._manifests.lsst %}
+{%- set bps = cookiecutter._manifests.bps %}
+{%- set wms = cookiecutter._manifests.wms %}
+{%- set site = cookiecutter._manifests.facility %}
+################################################
+{%- if lsst.ticket %}
+# https://rubinobs.atlassian.net/browse/{{ lsst.ticket }}
+{%- endif %}
+{%- if lsst.description %}
+# {{ lsst.description }}
+{%- endif %}
+################################################
+{%- if lsst.project %}
+project: {{ lsst.project }}
+{%- endif %}
+{%- if lsst.campaign %}
+campaign: {{ lsst.campaign }}
+{%- endif %}
+{%- if bps.operator %}
+operator: {{ bps.operator }}
+{%- endif %}
+{# BLANK LINE #}
+################################################
+# LSST SETUP
+################################################
+LSST_VERSION: "{{ lsst.lsst_version }}"
+{# BLANK LINE #}
+################################################
+# PIPETASK TUNING OPTIONS
+################################################
+# Options that go between executable and command (e.g., between pipetask and run)
+defaultPreCmdOpts: "--long-log --log-level=VERBOSE"
+# for createQuantumGraph
+qgraphPreCmdOpts: "{defaultPreCmdOpts}"
+# for pipetaskInit
+initPreCmdOpts: "{defaultPreCmdOpts}"
+# for running Quanta
+runPreCmdOpts: "{defaultPreCmdOpts}"
+# for updateQuantumGraph
+updateQgraphPreCmdOpts: "{defaultPreCmdOpts}"
+{# BLANK LINE #}
+# pipetask:
+#   myTask:
+#     requestCpus:
+#     requestMemory:
+#     requestDisk:
+#     requestWalltime:
+#     runQuantumCommand:
+#     memoryMultiplier:
+#     numberOfRetries:
+{# BLANK LINE #}
+################################################
+# BPS PAYLOAD OPTIONS
+################################################
+{%- if bps.pipeline_yaml %}
+pipelineYaml: "{{ bps.pipeline_yaml }}"
+{%- elif bps.qgraph_file %}
+qgraphFile: "{{ bps.qgraph_file }}"
+{%- endif %}
+submitPath: "${PWD}/submit/{outputRun}"
+payload:
+{%- for key, value in bps.payload|items %}
+  {{ key }}: "{{ value | trim }}"
+{%- endfor %}
+{# BLANK LINE #}
+numberOfRetries: 5
+retryUnlessExit:
+  - 1
+  - 2
+memoryMultiplier: 2
+{# BLANK LINE #}
+################################################
+# SITE WMS CONFIGURATION
+################################################
+wmsServiceClass: "{{ wms.service_class }}"
+computeSite: "{{ site.compute_site }}"
+{# BLANK LINE #}
+################################################
+# PROVISIONING CONFIGURATION
+################################################
+{%- if wms.auto_provision %}
+provisionResources: {{ wms.auto_provision | string | lower }}
+provisioning:
+  provisioningNodeCount: {{ wms.provisioned_node_count }}
+  provisioningMaxIdleTime: {{ wms.provisioned_idle_time }}
+  provisioningMaxWallTime: {{ wms.provisioned_max_wall_time }}
+  provisioningCheckInterval: {{ wms.provisioned_check_interval }}
+  provisioningQueue: {{ site.provisioned_queue }}
+  provisioningAccountingUser: {{ site.provisioned_account_group }}
+  provisioningPlatform: "{{ site.provisioned_platform }}"
+  provisioningExtraOptions: "{{ wms.provisioned_extra_arguments | join(' ') }}"
+{%- else %}
+nodeset: {{ wms.batch_name }}
+{# BLANK LINE #}
+{%- endif %}
+################################################
+# FINALJOB CONFIGURATION
+################################################
+finalJob:
+  retryUnlessExit: 2
+  updateOutputChain: "--update-output-chain"
+  whenSetup: "NEVER"
+  whenRun: "ALWAYS"
+  # NOTE: command1 is part of BPS defaults
+  #       start custom finalJobs with command2
+  # command2: >-
+  #   echo "All done!"
+{# BLANK LINE #}
